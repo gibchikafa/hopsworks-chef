@@ -57,6 +57,8 @@ default['hopsworks']['conda_cache']              = node['hopsworks']['staging_di
 
 default['hopsworks']['jupyter_dir']              = node['hopsworks']['dir'] + "/jupyter"
 
+default['hopsworks']['rstudio_dir']              = node['hopsworks']['dir'] + "/rstudio"
+
 default['hopsworks']['max_mem']                  = "3000"
 default['glassfish']['max_mem']                  = node['hopsworks']['max_mem'].to_i
 default['hopsworks']['min_mem']                  = "1024"
@@ -363,6 +365,50 @@ default['dtrx']['download_url']                      = "#{node['download_url']}/
 default['rstudio']['deb']                            = "rstudio-server-1.1.447-amd64.deb"
 default['rstudio']['rpm']                            = "rstudio-server-rhel-1.1.447-x86_64.rpm"
 default['rstudio']['enabled']                        = "false"
+
+
+#rstudio configuration variables
+default["hopsworks"]['rstudio_host']                 = "localhost"
+default["hopsworks"]['rstudio_origin_scheme']        = "https"
+default["hopsworks"]["rstudio_www_address"]          = "127.0.0.1"
+default["hopsworks"]["rstudio_session_timeout_minutes"] = 360
+default["hopsworks"]["rstudio_logging_level"]        = "info"
+default["hopsworks"]["rstudio_logger_type"]          = "file"
+default["hopsworks"]["rstudio_log_file_max_size"]    = 512
+default["hopsworks"]["rstudio_default_cran_repo"]    = "https://cloud.r-project.org/"
+
+default['rstudio']['base_dir']                       = node['install']['dir'].empty? ? node['hopsworks']['dir'] + "/rstudio" : node['install']['dir'] + "/rstudio"
+
+# CRAN
+default['rstudio']['cran']['mirror'] = 'http://cran.rstudio.com/'
+
+# APT configuration for Ubuntu or Debian installs.
+case node["platform"].downcase
+when "ubuntu"
+  default['rstudio']['apt']['key'] = 'E084DAB9'
+  default['rstudio']['apt']['keyserver'] = 'keyserver.ubuntu.com'
+  default['rstudio']['apt']['uri'] = 'http://cran.stat.ucla.edu/bin/linux/ubuntu'
+when "debian"
+  default['rstudio']['apt']['key'] = '381BA480'
+  default['rstudio']['apt']['keyserver'] = 'subkeys.pgp.net'
+  default['rstudio']['apt']['uri'] = 'http://cran.stat.ucla.edu/bin/linux/debian'
+end
+
+# You can define a simple array of packages in your role/environment/node and the
+# CRAN recipe will install them.
+default['rstudio']['cran']['packages'] = []
+
+# RStudio Server
+default['rstudio']['server']['www_port'] = '8787'
+default['rstudio']['server']['www_address'] = '127.0.0.1'
+default['rstudio']['server']['ld_library_path'] = ''
+default['rstudio']['server']['r_binary_path'] = ''
+default['rstudio']['server']['user_group'] = ''
+
+# RStudio Session
+default['rstudio']['session']['timeout'] = '30'
+default['rstudio']['session']['package_path'] = ''
+default['rstudio']['session']['cran_repo'] = 'http://cran.case.edu/'
 
 default['hopsworks']['kafka_max_num_topics']                   = '100'
 

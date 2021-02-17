@@ -1,0 +1,10 @@
+[*]
+log-level=warn
+logger-type=syslog
+
+[@rserver]
+log-level=${conf.logLevel}
+logger-type=${conf.loggerType}
+max-size-mb=${conf.maxSizeMb}
+log-dir=${conf.logDir}
+log-file-include-pid=${conf.includePid}

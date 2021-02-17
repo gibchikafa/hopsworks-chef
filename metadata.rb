@@ -830,6 +830,37 @@ attribute "rstudio/enabled",
           :description => "Set to 'true' to enable RStudio in Hopsworks. Default 'false'.",
           :type => 'string'
 
+attribute "hopsworks/rstudio_host",
+					:description => "Host for the RStudio server e.g localhost",
+					:type => "string"
+
+attribute "hopsworks/rstudio_origin_scheme",
+					:description => "The origin scheme for the RStudio server e.g https",
+					:type => "string"
+
+attribute "hopsworks/rstudio_www_address",
+					:description => "The network address that RStudio Server will listen on for incoming connections.",
+					:type => "string"
+
+attribute "hopsworks/rstudio_session_timeout_minutes",
+					:description => "The amount of minutes before a session times out, at which point the session will either suspend or exit.",
+					:type => "string"
+
+attribute "hopsworks/rstudio_logging_level",
+					:description => "The minimum log level to capture. Can be one of debug, info, warn, or error",
+					:type => "string"
+
+attribute "hopsworks/rstudio_logger_type",
+					:description => "The type of logger to use. Can be one of stderr, syslog, or file.",
+					:type => "string"
+
+attribute "hopsworks/rstudio_log_file_max_size",
+					:description => "Maximum allowable size of the file before it is rotated. Only applicable if rotate is enabled.",
+					:type => "string"
+
+attribute "hopsworks/rstudio_dir",
+					:description => "Default installation directory for rstudio server",
+					:type => "string"
 ### PyPi
 
 attribute "hopsworks/pypi_rest_endpoint",
