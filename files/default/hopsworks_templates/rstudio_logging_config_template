@@ -1,0 +1,4 @@
+[@rserver]
+log-level=${conf.logLevel}
+logger-type=${conf.loggerType}
+max-size-mb=${conf.maxSizeMb}

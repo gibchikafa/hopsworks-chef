@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+
+# This script allows Hopsworks to start/kill JupyterLab .
+# There will be 1 notebook-server per ProjectUser.
+# This script can be run by hopsworks (running as user 'glassfish') as a sudo command whereupon
+# it changes user to 'jupyter' to run the command as user 'jupyter'.
+#
+
+help() {
+    echo ""
+    echo "usage: $0 [start rstudio_home hadoop_home project_user_name port secret_dir certs_dir hadoop_username
+    image_name logfile] | [kill rstudio_home container_id project_user_name]"
+    echo ""
+    exit 1
+}
+
+DOMAINS_DIR=<%= node['glassfish']['domains_dir'] %>
+RSTUDIO_USER=<%= node['hops']['yarnapp']['user'] %>
+RSTUDIO_GROUP=<%= node['hops']['group'] %>
+HOPSWORKS_USER=<%= node['hopsworks']['user'] %>
+VALID_IMAGE_NAME='<%= node['conda']['docker']['image-validation-regex'] %>'
+
+if [ "$1" == "kill" ] ; then
+
+    if [ $# -ne 4 ]; then
+	help
+    fi
+
+    # Don't kill the pid from this script, as it is run with 'sudo' privileges. Only do it as user 'jupyter'
+    sudo ${DOMAINS_DIR}/domain1/bin/rstudio-kill.sh $3 $4
+
+    # Remove all the directories in the home jupyter folder for this project-user.
+    if [ "$2" != "" ] ; then
+	# Try and make sure some silly directory is not deleted, that this
+	if [[ $2 = *"hops/rstudio/Projects"* ]]; then
+            rm -rf "${2}"/../*
+	fi
+    fi
+
+elif [ "$1" == "start" ] ; then
+
+    if [ $# -ne 14 ]; then
+	help
+    fi
+
+    # Sanity checks for injection attacks
+    if [ ! -d "$2" ] ; then
+	echo "Invalid RSTUDIO_HOME directory: $2"
+	exit 1
+    fi
+    if [ ! -d "$3" ] ; then
+	echo "Invalid HADOOP_HOME directory: $3"
+	exit 2
+    fi
+
+    if [ ! -d "${7}" ] ; then
+	echo "Invalid certificates directory: $9"
+	exit 3
+    fi
+
+    re='^[0-9]+$'
+    if ! [[ $5 =~ $re ]] ; then
+      echo "error: Not a number" >&2
+      help
+    fi
+
+    if ! [[ ${8} =~ $VALID_IMAGE_NAME ]] ; then
+	echo "error: Not an image name ${13}" >&2
+	help
+    fi
+
+    pid=$(ps -ef | grep -E "rstudio-server" | grep "port=$5" | awk '{print $2}')
+    if [ "$pid" != "" ] ; then
+	echo "There is already an rstudio server using this port"
+	exit 1
+    fi
+
+    # Should look like 'name-4444.log', where '4444' is the port number for the server
+    if [[ $9 =~ ^[a-zA-Z0-9_\.]{1,255}__[a-zA-Z0-9_\.]{3,32}\-[0-9]+\.log ]] ; then
+	echo "logfile ok"
+    else
+	echo "Invalid logfile parameter: $9"
+	exit 4
+    fi
+
+#    if [[ $8 =~ ^\/$|(^(?=\/)|^\.|^\.\.)(\/(?=[^/\0])[^/\0]+)*\/?$ ]] ; then
+#	echo "secret_dir looks like a path has, ok"
+#    else
+#	echo "Invalid secret_dir parameter, doesn't look like a path: $8"
+#	exit 4
+#    fi
+
+    mkdir -p "$6"
+    if [ $? -ne 0 ] ; then
+	echo "Error: could not create private_dir: $6"
+	exit 1
+    fi
+    chmod 770 "$6"
+    chown "${RSTUDIO_USER}":"${RSTUDIO_GROUP}" "$6"
+
+    # Make the group of the files, the jupyter group so that they can write to the files
+    chown -R "${HOPSWORKS_USER}":"${RSTUDIO_GROUP}" "$2/"..
+    if [ $? -ne 0 ] ; then
+	echo "Error: could not change ownership of config_dir for Jupyter: $2"
+	exit 1
+    fi
+    chmod 0730 "$2/"..
+    chown -R "${RSTUDIO_USER}":"${RSTUDIO_GROUP}" "$2"
+    chmod -R 770 "$2"
+
+    # Launch JupyterLab
+    #${DOMAINS_DIR}/domain1/bin/jupyter-launch.sh $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14}
+
+# list
+elif [ "$1" == "list" ] ; then
+    # This command will output line-separated PIDs for all running jupyter-notebooks into the tmp file, from where it is read by Hopsworks
+    docker container list -a | grep "__jupyter" |  grep -v 'grep' | awk '{print $1}' > /tmp/jupyterNotebookServer.pids
+else
+  help
+fi
+
+
+exit $?

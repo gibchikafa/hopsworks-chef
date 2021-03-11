@@ -75,3 +75,30 @@ DROP FOREIGN KEY `fs_connector_snowflake_fk`,
 DROP COLUMN `snowflake_id`;
 
 DROP TABLE IF EXISTS `hopsworks`.`feature_store_snowflake_connector`;
+
+ALTER TABLE `hopsworks`.`rstudio_settings`
+    ADD COLUMN `num_tf_ps` int(11) DEFAULT '1',
+    ADD COLUMN `num_tf_gpus` int(11) DEFAULT '0',
+    ADD COLUMN `num_mpi_np` int(11) DEFAULT '1',
+    ADD COLUMN `appmaster_cores` int(11) DEFAULT '1',
+    ADD COLUMN `appmaster_memory` int(11) DEFAULT '1024',
+    ADD COLUMN `num_executors` int(11) DEFAULT '1',
+    ADD COLUMN `num_executor_cores` int(11) DEFAULT '1',
+    ADD COLUMN `executor_memory` int(11) DEFAULT '1024',
+    ADD COLUMN `dynamic_initial_executors` int(11) DEFAULT '1',
+    ADD COLUMN `dynamic_min_executors` int(11) DEFAULT '1',
+    ADD COLUMN `dynamic_max_executors` int(11) DEFAULT '1',
+    ADD COLUMN `mode` varchar(32) COLLATE latin1_general_cs NOT NULL,
+    ADD COLUMN `umask` varchar(32) COLLATE latin1_general_cs DEFAULT '022',
+    ADD COLUMN `advanced` tinyint(1) DEFAULT '0',
+    ADD COLUMN `archives` varchar(1500) COLLATE latin1_general_cs DEFAULT '',
+    ADD COLUMN `jars` varchar(1500) COLLATE latin1_general_cs DEFAULT '',
+    ADD COLUMN `files` varchar(1500) COLLATE latin1_general_cs DEFAULT '',
+    ADD COLUMN `py_files` varchar(1500) COLLATE latin1_general_cs DEFAULT '',
+    ADD COLUMN `spark_params` varchar(6500) COLLATE latin1_general_cs DEFAULT '';
+
+ALTER TABLE `hopsworks`.`rstudio_project`
+    ADD COLUMN `host_ip` varchar(255) COLLATE latin1_general_cs NOT NULL,
+    ADD COLUMN `token` varchar(255) COLLATE latin1_general_cs NOT NULL;
+
+ALTER TABLE `hopsworks`.`rstudio_project` DROP COLUMN `expires`;

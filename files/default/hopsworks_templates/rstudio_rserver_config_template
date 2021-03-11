@@ -1,0 +1,4 @@
+rsession-which-r=${conf.rVersion}
+www-address=${conf.ipAddress}
+www-port=${conf.port}
+www-root-path=${conf.rootPath}

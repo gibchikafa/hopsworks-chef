@@ -124,3 +124,12 @@ CREATE TABLE IF NOT EXISTS `hopsworks`.`feature_store_snowflake_connector` (
 ALTER TABLE `hopsworks`.`feature_store_connector`
   ADD COLUMN `snowflake_id` INT(11) after `adls_id`,
   ADD CONSTRAINT `fs_connector_snowflake_fk` FOREIGN KEY (`snowflake_id`) REFERENCES `hopsworks`.`feature_store_snowflake_connector` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+ALTER TABLE `hopsworks`.`rstudio_settings` DROP `num_tf_ps`, DROP `num_tf_gpus`, DROP `num_mpi_np`,
+    DROP `appmaster_cores`, DROP `appmaster_memory`, DROP `num_executors`, DROP `num_executor_cores`,
+    DROP `executor_memory`, DROP `dynamic_initial_executors`,DROP `dynamic_min_executors`, DROP `dynamic_max_executors`,
+    DROP `log_level`, DROP `mode`, DROP `umask`, DROP `archives`, DROP `jars`, DROP `files`,DROP `py_files`, DROP `spark_params`;
+
+ALTER TABLE `hopsworks`.`rstudio_project` DROP `host_ip`, DROP `token`;
+
+ALTER TABLE `hopsworks`.`rstudio_project` ADD COLUMN `expires` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;
