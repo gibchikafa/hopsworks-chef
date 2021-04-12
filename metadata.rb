@@ -861,6 +861,10 @@ attribute "hopsworks/rstudio_log_file_max_size",
 attribute "hopsworks/rstudio_dir",
 					:description => "Default installation directory for rstudio server",
 					:type => "string"
+
+attribute "rstudio/shutdown_timer_interval",
+					:description => "rstudio interval for shutting down expired rstudio servers",
+					:type => "string"
 ### PyPi
 
 attribute "hopsworks/pypi_rest_endpoint",

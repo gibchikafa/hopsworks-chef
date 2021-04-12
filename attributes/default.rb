@@ -379,6 +379,7 @@ default["hopsworks"]["rstudio_log_file_max_size"]    = 512
 default["hopsworks"]["rstudio_default_cran_repo"]    = "https://cloud.r-project.org/"
 
 default['rstudio']['base_dir']                       = node['install']['dir'].empty? ? node['hopsworks']['dir'] + "/rstudio" : node['install']['dir'] + "/rstudio"
+default['rstudio']['shutdown_timer_interval']          = "30m"
 
 # CRAN
 default['rstudio']['cran']['mirror'] = 'http://cran.rstudio.com/'

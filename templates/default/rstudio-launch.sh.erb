@@ -11,20 +11,23 @@ CERTS_DIR=$6
 IMAGE=${7}
 LOGFILE=${RSTUDIO_HOME}/logs/$8
 PROJECT_NAME=$9
-NAMENODE_HOST=${10}
-NAMENODE_PORT=${11}
+LIVY_IP=${10}
+LIVY_PORT=${11}
 HADOOP_BASE_DIR=${12}
+SERVER_PASSWORD=${13}
+HADOOP_VERSION=${14}
 HADOOP_CLIENT_ENV_OPTS='-D fs.permissions.umask-mode=0002'
 CONTAINER_NAME=${PROJECT_USER_NAME}__rstudio
 PID_FILE=${RSTUDIO_HOME}/run/rstudio.pid
-SPARK_CONF_DIR=<%= node['hadoop_spark']['conf_dir'] %> #/srv/hops/spark/conf
+SPARK_CONF_DIR=<%= node['hadoop_spark']['conf_dir'] %>
 FLINK_CONF_DIR=<%= node['flink']['conf_dir'] %>
 NOT_FOUND=127
+SPARKLYR_CONFIG_FILE=${RSTUDIO_HOME}/conf/config.yml
 
-echo "Image name is ${IMAGE}"
+echo "Server password is ${SERVER_PASSWORD}"
 help() {
     echo ""
-    echo "usage: $0 RSTUDIO_HOME HADOOP_HOME PROJECT_USER_NAME PORT SECRET_DIR CERTS_DIR IMAGE LOGFILE PROJECT_NAME NAMENODE_HOST NAMENODE_PORT HADOOP_BASE_DIR HADOOP_CLIENT_ENV_OPTS"
+    echo "usage: $0 RSTUDIO_HOME HADOOP_HOME PROJECT_USER_NAME PORT SECRET_DIR CERTS_DIR IMAGE LOGFILE PROJECT_NAME NAMENODE_HOST NAMENODE_PORT HADOOP_BASE_DIR HADOOP_CLIENT_ENV_OPTS SERVER_PASSWORD HADOOP_VERSION"
     echo ""
     exit 1
 }
@@ -40,7 +43,7 @@ function kill_named {
     return "$res"
 }
 
-if [ $# -ne 12 ]; then
+if [ $# -ne 14 ]; then
   help
 fi
 
@@ -73,10 +76,13 @@ docker run --rm -d --privileged --name $CONTAINER_NAME --cidfile=$PID_FILE\
        -e "LOGFILE=${LOGFILE}" \
        -e "RSTUDIO_PORT=${PORT}" \
        -e "PROJECT_NAME=${PROJECT_NAME}" \
-       -e "NAMENODE_HOST=${NAMENODE_HOST}" \
-       -e "NAMENODE_PORT=${NAMENODE_PORT}" \
+       -e "LIVY_IP=${LIVY_IP}" \
+       -e "LIVY_PORT=${LIVY_PORT}" \
        -e "HADOOP_BASE_DIR=${HADOOP_BASE_DIR}" \
        -e "HADOOP_CLIENT_ENV_OPTS=${HADOOP_CLIENT_ENV_OPTS}" \
+       -e "SPARKLYR_CONFIG_FILE=${SPARKLYR_CONFIG_FILE}" \
+       -e "SERVER_PASSWORD=${SERVER_PASSWORD}" \
+       -e "HADOOP_VERSION=${HADOOP_VERSION}" \
        -v $RSTUDIO_HOME:$RSTUDIO_HOME:rw\
        -v $SECRET_DIR:$SECRET_DIR:rw\
        -v ${HADOOP_CONF_DIR}:${HADOOP_CONF_DIR}:ro \
@@ -84,7 +90,6 @@ docker run --rm -d --privileged --name $CONTAINER_NAME --cidfile=$PID_FILE\
        -u="yarnapp" \
        -w="$SECRET_DIR" \
        $IMAGE & \
-
 
 # Wait for rstudio to start
 timeout=0
