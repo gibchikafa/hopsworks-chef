@@ -9,7 +9,7 @@
 help() {
     echo ""
     echo "usage: $0 [start rstudio_home hadoop_home project_user_name port secret_dir certs_dir hadoop_username
-     image_name logfile server_password hadoop_version] | [kill rstudio_home container_id project_user_name]"
+     image_name logfile server_password hadoop_version hdfs_namenode_ip hdfs_namenode_port spark_version] | [kill rstudio_home container_id project_user_name]"
     echo ""
     exit 1
 }
@@ -39,7 +39,7 @@ if [ "$1" == "kill" ] ; then
 
 elif [ "$1" == "start" ] ; then
 
-    if [ $# -ne 15 ]; then
+    if [ $# -ne 19 ]; then
         help
     fi
 
@@ -109,7 +109,7 @@ elif [ "$1" == "start" ] ; then
     chmod -R 770 "$2"
 
     # Launch RStudio server
-    ${DOMAINS_DIR}/domain1/bin/rstudio-launch.sh $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15}
+    ${DOMAINS_DIR}/domain1/bin/rstudio-launch.sh $2 $3 $4 $5 $6 $7 $8 $9 ${10} ${11} ${12} ${13} ${14} ${15} ${16} ${17} ${18} ${19}
 
 # list
 elif [ "$1" == "list" ] ; then
@@ -120,4 +120,3 @@ else
 fi
 
 
-exit $?
