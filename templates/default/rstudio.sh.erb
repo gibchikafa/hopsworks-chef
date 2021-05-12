@@ -21,7 +21,6 @@ HOPSWORKS_USER=glassfish
 VALID_IMAGE_NAME='^([a-z0-9]+(-[a-z0-9]+)*.)*[a-z0-9]+(:[0-9]*)?(/([a-zA-Z0-9-]*))?/([-:._a-zA-Z0-9]{0,62}[-:.a-zA-Z0-9]$)'
 
 if [ "$1" == "kill" ] ; then
-
     if [ $# -ne 4 ]; then
         help
     fi
@@ -115,6 +114,43 @@ elif [ "$1" == "start" ] ; then
 elif [ "$1" == "list" ] ; then
     # This command will output line-separated PIDs for all running jupyter-notebooks into the tmp file, from where it is read by Hopsworks
     docker container list -a | grep "__rstudio" |  grep -v 'grep' | awk '{print $1}' > /tmp/rstudioServerPids.pids
+elif [ "$1" == "generate_pems" ]; then
+    if [ $# -ne 3 ]; then
+        help
+    fi
+
+    CERTS_DIR=$2
+    HADOOP_USERNAME=$3
+    TSTORE_FILE=$CERTS_DIR/${HADOOP_USERNAME}__tstore.jks
+    KSTORE_FILE=$CERTS_DIR/${HADOOP_USERNAME}__kstore.jks
+    KEY_FILE=$CERTS_DIR/${HADOOP_USERNAME}__cert.key
+
+    KEY=$( cat ${KEY_FILE} )
+
+    #1. generate pem certificates bundle from the keystore.jks file
+    printf "$KEY\n$KEY\n$KEY\n" | keytool -importkeystore -srckeystore $KSTORE_FILE -destkeystore $CERTS_DIR/${HADOOP_USERNAME}__keystore.p12 -deststoretype PKCS12
+    echo $KEY | keytool -deststoretype PKCS12 -keystore $CERTS_DIR/${HADOOP_USERNAME}__keystore.p12 -list
+    echo $KEY | openssl pkcs12 -nokeys -in $CERTS_DIR/${HADOOP_USERNAME}__keystore.p12 -out $CERTS_DIR/${HADOOP_USERNAME}_certificate_bundle.pem
+
+    #2. generate root ca pem from the tstore.jks file file
+    printf "$KEY\n$KEY\n$KEY\n" | keytool -importkeystore -srckeystore $TSTORE_FILE -destkeystore $CERTS_DIR/${HADOOP_USERNAME}__tstore.p12 -deststoretype PKCS12
+    echo $KEY | keytool -deststoretype PKCS12 -keystore $CERTS_DIR/${HADOOP_USERNAME}__tstore.p12 -list
+    echo $KEY | openssl pkcs12 -nokeys -in $CERTS_DIR/${HADOOP_USERNAME}__tstore.p12 -out $CERTS_DIR/${HADOOP_USERNAME}_root_ca.pem
+
+    #3. verify that files have been generated
+    CERTIFICATES_BUNDLE=$CERTS_DIR/${HADOOP_USERNAME}_certificate_bundle.pem
+    if [ ! -f ${CERTIFICATES_BUNDLE} ]; then
+      echo "Failed to generate certificates bundle for project"
+      exit 4
+    fi
+    ROOT_CA=$CERTS_DIR/${HADOOP_USERNAME}_root_ca.pem
+    if [ ! -f ${ROOT_CA} ]; then
+      echo "Failed to generate root ca for project"
+      exit 5
+    fi
+
+    rm $CERTS_DIR/${HADOOP_USERNAME}__keystore.p12
+    rm $CERTS_DIR/${HADOOP_USERNAME}__tstore.p12
 else
   help
 fi
