@@ -27,6 +27,9 @@ NAMENODE_IP=${15}
 NAMENODE_PORT=${16}
 PROJECT_NAME=${17}
 SPARK_VERSION=${18}
+CLIENT_CERTIFICATES_BUNDLE=${CERTS_DIR}/${PROJECT_USER_NAME}_certificate_bundle.pem
+ROOT_CA_BUNDLE=${CERTS_DIR}/${PROJECT_USER_NAME}_root_ca.pem
+CLIENT_KEY=${CERTS_DIR}/${PROJECT_USER_NAME}_private_key.pem
 
 echo "Server password is ${SERVER_PASSWORD}"
 help() {
@@ -91,6 +94,9 @@ docker run --rm -d --privileged --name $CONTAINER_NAME --cidfile=$PID_FILE\
        -e "NAMENODE_PORT=${NAMENODE_PORT}" \
        -e "PROJECT_NAME=${PROJECT_NAME}" \
        -e "SPARK_VERSION=${SPARK_VERSION}" \
+       -e "CLIENT_CERTIFICATES_BUNDLE=${CLIENT_CERTIFICATES_BUNDLE}" \
+       -e "ROOT_CA_BUNDLE=${ROOT_CA_BUNDLE}" \
+       -e "CLIENT_KEY=${CLIENT_KEY}" \
        -v $RSTUDIO_HOME:$RSTUDIO_HOME:rw\
        -v $SECRET_DIR:$SECRET_DIR:rw\
        -v ${HADOOP_CONF_DIR}:${HADOOP_CONF_DIR}:ro \
