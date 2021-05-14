@@ -39,3 +39,5 @@ DROP COLUMN `expires`,
 ALTER TABLE `hopsworks`.`rstudio_project` MODIFY COLUMN `pid` bigint(20) NOT NULL;
 
 ALTER TABLE `hopsworks`.`rstudio_settings` DROP COLUMN `job_config`;
+
+ALTER TABLE `hopsworks`.`rstudio_settings` DROP COLUMN `docker_config`;

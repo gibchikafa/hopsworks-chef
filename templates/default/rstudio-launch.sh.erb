@@ -78,7 +78,6 @@ docker run --rm -d --privileged --name $CONTAINER_NAME --cidfile=$PID_FILE\
        -e "HADOOP_CLIENT_OPTS='-Dfs.permissions.umask-mode=0002'" \
        -e "MATERIAL_DIRECTORY=$CERTS_DIR" \
        -e "HADOOP_USER_NAME=$PROJECT_USER_NAME" \
-       -e "HADOOP_USER_NAME=$PROJECT_USER_NAME" \
        -e "HADOOP_HOME=${HADOOP_HOME}" \
        -e "LOGFILE=${LOGFILE}" \
        -e "RSTUDIO_PORT=${PORT}" \

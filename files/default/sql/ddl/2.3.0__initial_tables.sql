@@ -1117,6 +1117,7 @@ CREATE TABLE `rstudio_settings` (
   `shutdown_level` int(11) NOT NULL DEFAULT '6',
   `base_dir` varchar(255) COLLATE latin1_general_cs DEFAULT NULL,
   `job_config` varchar(11000) COLLATE latin1_general_cs DEFAULT NULL,
+  `docker_config` varchar(1000) COLLATE latin1_general_cs DEFAULT NULL,
   PRIMARY KEY (`project_id`,`team_member`),
   KEY `team_member` (`team_member`),
   KEY `secret_idx` (`secret`),

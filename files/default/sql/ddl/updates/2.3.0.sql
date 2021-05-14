@@ -74,3 +74,6 @@ ALTER TABLE `hopsworks`.`rstudio_project` MODIFY COLUMN `pid`  varchar(255) COLL
 
 ALTER TABLE `hopsworks`.`rstudio_settings` ADD COLUMN `job_config` varchar(11000) COLLATE latin1_general_cs DEFAULT
     NULL;
+
+ALTER TABLE `hopsworks`.`rstudio_settings` ADD COLUMN `docker_config` varchar(1000) COLLATE latin1_general_cs DEFAULT
+    NULL;
