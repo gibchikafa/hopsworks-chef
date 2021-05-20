@@ -584,7 +584,6 @@ kagent_sudoers "rstudio" do
   script_name   "rstudio.sh"
   template      "rstudio.sh.erb"
   run_as        "ALL" # run this as root - inside we change to different users
-  not_if       { node['install']['kubernetes'].casecmp("true") == 0 }
 end
 
 kagent_sudoers "convert-ipython-notebook" do 
