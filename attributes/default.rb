@@ -379,7 +379,7 @@ default['rstudio']['enabled']                        = "false"
 #rstudio configuration variables
 default["hopsworks"]['rstudio_host']                 = "localhost"
 default["hopsworks"]['rstudio_origin_scheme']        = "https"
-default["hopsworks"]["rstudio_www_address"]          = "127.0.0.1"
+default["hopsworks"]["rstudio_www_address"]          = "0.0.0.0"
 default["hopsworks"]["rstudio_session_timeout_minutes"] = 360
 default["hopsworks"]["rstudio_logging_level"]        = "info"
 default["hopsworks"]["rstudio_logger_type"]          = "file"
