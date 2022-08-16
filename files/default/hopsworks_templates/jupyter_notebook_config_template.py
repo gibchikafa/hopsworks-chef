@@ -36,9 +36,9 @@ c.ResourceUseDisplay.cpu_limit = ${conf.allocatedNotebookCores?c}
 c.NotebookApp.allow_origin = '${conf.allowOrigin}'
 c.NotebookApp.tornado_settings = {
     'ws_ping_interval': ${conf.wsPingInterval?c},
-'headers': {
-    'Content-Security-Policy': "frame-ancestors 'self' "
-}
+    'headers': {
+        'Content-Security-Policy': "frame-ancestors 'self' "
+    }
 }
 
 c.FileCheckpoints.checkpoint_dir='${conf.secretDirectory}'
