@@ -1,16 +1,9 @@
 c = get_config()
-c.HDFSContentsManager.hdfs_namenode_host='${conf.namenodeIp}'
-c.HDFSContentsManager.hdfs_namenode_port=${conf.namenodePort}
-c.HDFSContentsManager.root_dir='${conf.baseDirectory}'
-c.HDFSContentsManager.hdfs_user = '${conf.hdfsUser}'
-c.HDFSContentsManager.hadoop_client_env_opts = '-D fs.permissions.umask-mode=0002'
-
-c.NotebookApp.contents_manager_class = '${conf.contentsManager}'
 
 c.NotebookApp.ip = '127.0.0.1'
 c.NotebookApp.open_browser = False
 
-c.NotebookApp.notebook_dir = '${conf.secretDirectory}'
+c.NotebookApp.notebook_dir = '${conf.hopsfsMountProjectDir}'
 
 c.NotebookApp.port_retries = 0
 c.NotebookApp.port = ${conf.port?c}
@@ -43,11 +36,12 @@ c.ResourceUseDisplay.cpu_limit = ${conf.allocatedNotebookCores?c}
 c.NotebookApp.allow_origin = '${conf.allowOrigin}'
 c.NotebookApp.tornado_settings = {
     'ws_ping_interval': ${conf.wsPingInterval?c},
-    'headers': {
-        'Content-Security-Policy': "frame-ancestors 'self' "
-    }
+'headers': {
+    'Content-Security-Policy': "frame-ancestors 'self' "
+}
 }
 
+c.FileCheckpoints.checkpoint_dir='${conf.secretDirectory}'
 
 import os
 os.environ['REST_ENDPOINT'] = "${conf.hopsworksEndpoint}"

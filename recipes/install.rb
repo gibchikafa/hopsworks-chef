@@ -697,8 +697,9 @@ template "#{theDomain}/bin/tfserving-launch.sh" do
   action :create
 end
 
-["tensorboard-launch.sh", "tensorboard-cleanup.sh", "condasearch.sh", "list_environment.sh", "jupyter-kill.sh",
- "jupyter-launch.sh", "tfserving-kill.sh", "sklearn_serving-launch.sh", "sklearn_serving-kill.sh", "git-container-kill.sh"].each do |script|
+["zip-hdfs-files.sh", "zip-background.sh", "unzip-background.sh",  "tensorboard-launch.sh",
+ "tensorboard-cleanup.sh", "condasearch.sh", "list_environment.sh", "jupyter-kill.sh",
+ "tfserving-kill.sh", "sklearn_serving-launch.sh", "sklearn_serving-kill.sh", "git-container-kill.sh"].each do |script|
   template "#{theDomain}/bin/#{script}" do
     source "#{script}.erb"
     owner node['glassfish']['user']
@@ -706,6 +707,17 @@ end
     mode "500"
     action :create
   end
+end
+
+template "#{theDomain}/bin/jupyter-launch.sh" do
+  source "jupyter-launch.sh.erb"
+  owner node['glassfish']['user']
+  group node['glassfish']['group']
+  mode "500"
+  action :create
+  variables({
+              :namenode_fdqn => namenode_fdqn,
+            })
 end
 
 template "#{theDomain}/bin/git-container-launch.sh" do
