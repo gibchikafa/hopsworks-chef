@@ -902,5 +902,5 @@ end
 
 #install cadvisor only on the headnode and no kubernetes
 if (exists_local("hopsworks", "default")) && (node['install']['kubernetes'].casecmp?("false"))
-  include_recipe "hops::cadvisor"
+  include_recipe "hopsworks::cadvisor"
 end
