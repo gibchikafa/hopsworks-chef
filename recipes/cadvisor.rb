@@ -61,3 +61,12 @@ if node['kagent']['enabled'] == "true"
     action :add
   end
 end
+
+
+if service_discovery_enabled()
+  # Register cAdvisor with Consul
+  consul_service "Registering cAdvisor with Consul" do
+    service_definition "cadvisor-consul.hcl.erb"
+    action :register
+  end
+end
