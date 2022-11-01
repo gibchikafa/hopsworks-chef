@@ -123,5 +123,27 @@ ALTER TABLE `hopsworks`.`feature_store_activity` ADD CONSTRAINT `fs_act_validati
 ALTER TABLE `hopsworks`.`feature_store_activity` ADD COLUMN `expectation_suite_id` Int(11) NULL;
 ALTER TABLE `hopsworks`.`feature_store_activity` ADD CONSTRAINT `fs_act_expectationsuite_fk` FOREIGN KEY (`expectation_suite_id`) REFERENCES `expectation_suite` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-
 ALTER TABLE `hopsworks`.`project` ADD COLUMN `creation_status` TINYINT(1) NOT NULL DEFAULT '0';
+
+ALTER TABLE `hopsworks`.`rstudio_settings` DROP `num_tf_ps`, DROP `num_tf_gpus`, DROP `num_mpi_np`,
+DROP `appmaster_cores`, DROP `appmaster_memory`, DROP `num_executors`, DROP `num_executor_cores`,
+    DROP `executor_memory`, DROP `dynamic_initial_executors`,DROP `dynamic_min_executors`, DROP `dynamic_max_executors`,
+    DROP `log_level`, DROP `mode`, DROP `umask`, DROP `archives`, DROP `jars`, DROP `files`,DROP `py_files`, DROP `spark_params`;
+
+ALTER TABLE `hopsworks`.`rstudio_project` DROP `host_ip`, DROP `token`;
+
+ALTER TABLE `hopsworks`.`rstudio_project` ADD COLUMN `expires` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+ALTER TABLE `hopsworks`.`rstudio_project` ADD COLUMN `login_username` varchar(255) COLLATE latin1_general_cs DEFAULT
+    NULL;
+
+ALTER TABLE `hopsworks`.`rstudio_project` ADD COLUMN `login_password` varchar(255) COLLATE latin1_general_cs DEFAULT
+    NULL;
+
+ALTER TABLE `hopsworks`.`rstudio_project` MODIFY COLUMN `pid`  varchar(255) COLLATE latin1_general_cs NOT NULL;
+
+ALTER TABLE `hopsworks`.`rstudio_settings` ADD COLUMN `job_config` varchar(11000) COLLATE latin1_general_cs DEFAULT
+    NULL;
+
+ALTER TABLE `hopsworks`.`rstudio_settings` ADD COLUMN `docker_config` varchar(11000) COLLATE latin1_general_cs DEFAULT
+    NULL;
