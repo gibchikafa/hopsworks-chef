@@ -172,3 +172,7 @@ CREATE TABLE IF NOT EXISTS `feature_store_expectation_rule` (
 ) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
 ALTER TABLE `hopsworks`.`feature_group` ADD COLUMN `validation_type` INT(11) NOT NULL DEFAULT '4';
+
+DROP TABLE IF EXISTS `hopsworks`.`rstudio_environment_build`;
+
+ALTER TABLE `hopsworks`.`project` DROP COLUMN `rstudio_docker_image`;

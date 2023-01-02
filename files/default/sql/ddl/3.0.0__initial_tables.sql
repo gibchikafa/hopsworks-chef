@@ -832,6 +832,7 @@ CREATE TABLE `project` (
                            `kafka_max_num_topics` int(11) NOT NULL DEFAULT '100',
                            `docker_image` varchar(255) COLLATE latin1_general_cs DEFAULT NULL,
                            `python_env_id` int(11) DEFAULT NULL,
+                           `rstudio_docker_image` varchar(255) COLLATE latin1_general_cs DEFAULT NULL,
                            PRIMARY KEY (`id`),
                            UNIQUE KEY `projectname` (`projectname`),
                            UNIQUE KEY `inode_pid` (`inode_pid`,`inode_name`,`partition_id`),
@@ -1135,6 +1136,25 @@ CREATE TABLE `rstudio_settings` (
                                         ACTION,
                                     CONSTRAINT `RS_FK_PROJS` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+CREATE TABLE `rstudio_environment_build` (
+                                             `id` int NOT NULL AUTO_INCREMENT,
+                                             `build_script` varchar(1000) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
+                                             `user` int NOT NULL,
+                                             `project` int NOT NULL,
+                                             `build_start` bigint DEFAULT NULL,
+                                             `build_finish` bigint DEFAULT NULL,
+                                             `build_result` varchar(128) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
+                                             `secret` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_cs NOT NULL,
+                                             `logFile` varchar(1000) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL,
+                                             `build_name` varchar(255) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL,
+                                             `description` varchar(1000) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL,
+                                             PRIMARY KEY (`id`),
+                                             KEY `user_fk` (`user`),
+                                             KEY `rstudio_env_build_project_fk` (`project`),
+                                             CONSTRAINT `rstudio_env_build_project_fk` FOREIGN KEY (`project`) REFERENCES `project` (`id`) ON DELETE CASCADE,
+                                             CONSTRAINT `rstudio_env_build_usr_fkc` FOREIGN KEY (`user`) REFERENCES `users` (`uid`) ON DELETE CASCADE
+) ENGINE=ndbcluster AUTO_INCREMENT=5154 DEFAULT CHARSET=latin1
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40101 SET character_set_client = utf8 */;
