@@ -54,7 +54,7 @@ if [ -f "$PID_FILE" ] ; then
     rm $PID_FILE
 fi
 
-docker run --rm -d --name $CONTAINER_NAME --cidfile=$PID_FILE\
+docker run --rm -d --device /dev/fuse --security-opt apparmor:unconfined --security-opt seccomp=/etc/docker/fuse_seccomp.json --name $CONTAINER_NAME --cidfile=$PID_FILE\
        --network=host \
        --init \
        --memory="${ALLOCATED_MEMORY}m" \
