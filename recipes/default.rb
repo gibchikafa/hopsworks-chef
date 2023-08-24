@@ -281,7 +281,7 @@ encrypted_onlinefs_password = Digest::SHA256.hexdigest node['onlinefs']['hopswor
 
 # encrypt airflow user poassword
 airflow_salt = SecureRandom.base64(64)
-encrypted_airflow_password = Digest::SHA256.hexdigest node['airflow']['user']['pwd'] + airflow_salt
+encrypted_airflow_password = Digest::SHA256.hexdigest node['airflow']['hopsworks']['password'] + airflow_salt
 
 # Check if Kafka is to be installed 
 kafka_installed = true
@@ -326,7 +326,7 @@ for version in versions do
          :kafka_installed => kafka_installed,
          :apparmor_enabled => apparmor_enabled,
          :ha_enabled => node['hopsworks'].attribute?('das_node'),
-         :airflow_password => node['airflow']['user']['pwd'],
+         :airflow_password => node['airflow']['hopsworks']['password'],
          :airflow_salt => airflow_salt,
          :airflow_password => encrypted_airflow_password
     })
