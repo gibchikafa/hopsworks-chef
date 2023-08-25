@@ -326,7 +326,6 @@ for version in versions do
          :kafka_installed => kafka_installed,
          :apparmor_enabled => apparmor_enabled,
          :ha_enabled => node['hopsworks'].attribute?('das_node'),
-         :airflow_password => node['airflow']['hopsworks']['password'],
          :airflow_salt => airflow_salt,
          :airflow_password => encrypted_airflow_password
     })
