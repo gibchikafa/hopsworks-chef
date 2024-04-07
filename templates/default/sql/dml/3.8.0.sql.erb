@@ -3,3 +3,5 @@ DELETE FROM `hopsworks`.`variables` WHERE `id`='anaconda_dir';
 
 -- FSTORE-1226
 REPLACE INTO `hopsworks`.`variables`(`id`, `value`, `visibility`) VALUES ("opensearch_index_mapping_limit", "<%= node['hopsworks']['opensearch']['index_mapping_limit'] %>", 1);
+
+REPLACE INTO `hopsworks`.`variables`(`id`, `value`, `visibility`) VALUES ("spark_resource_manager", "<%= node['hopsworks']['spark']['resource_manager'] %>", 1);

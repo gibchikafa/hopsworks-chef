@@ -551,3 +551,5 @@ default['hopsworks']['statistics']['statistics_cleaner_interval_ms'] = "900000"
 ##
 default['hopsworks']['enable_feature_monitoring'] = "false"
 
+default['hopsworks']['spark']['resource_manager'] = "kubernetes"
+
