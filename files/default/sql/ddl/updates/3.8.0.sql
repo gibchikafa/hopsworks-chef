@@ -40,3 +40,5 @@ CREATE TABLE IF NOT EXISTS `hopsworks`.`model_link` (
 --FSTORE-920
 ALTER TABLE `hopsworks`.`feature_store_jdbc_connector`
     ADD `driver_path` VARCHAR(2000) DEFAULT NULL;
+
+ALTER TABLE `hopsworks`.`executions` ADD COLUMN `resource_manager` TINYINT(1) NOT NULL DEFAULT '0';
