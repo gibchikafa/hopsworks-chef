@@ -283,6 +283,7 @@ CREATE TABLE `executions` (
                               `finalStatus` varchar(128) COLLATE latin1_general_cs NOT NULL DEFAULT 'UNDEFINED',
                               `progress` float NOT NULL DEFAULT '0',
                               `resource_manager` TINYINT(1) NOT NULL DEFAULT 0,
+                              `history_server_app_id` varchar(255) COLLATE latin1_general_cs DEFAULT NULL,
                               PRIMARY KEY (`id`),
                               UNIQUE KEY `app_id` (`app_id`),
                               KEY `job_id` (`job_id`),
